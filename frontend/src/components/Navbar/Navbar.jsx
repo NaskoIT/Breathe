@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import classes from "./NavBar.module.scss";
 import { NavLink } from "react-router-dom";
-import { ABOUT_PATH, MAIN_PAGE_PATH } from "../../config/constants";
+import { ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH } from "../../config/constants";
 
 const NavBar = (props) => {
   const sideBarRef = useRef(null);
@@ -35,6 +35,20 @@ const NavBar = (props) => {
           activeClassName={classes.ActiveNavLink}
         >
           About
+        </NavLink>
+        <NavLink
+            to={AUTH_PATH}
+            onClick={closeNavbarHandler}
+            className={classes.NavLink}
+        >
+          Login
+        </NavLink>
+        <NavLink
+            to={AUTH_PATH}
+            onClick={closeNavbarHandler}
+            className={classes.NavLink}
+        >
+          Register
         </NavLink>
       </div>
       <button className={classes.NavbarBtn} onClick={openNavbarHandler}>

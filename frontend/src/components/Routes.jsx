@@ -7,8 +7,10 @@ import {
   useHistory,
 } from "react-router-dom";
 import { RouteOptions } from "../utils/enums";
-import { MAIN_PAGE_PATH, ABOUT_PATH } from "../config/constants";
+import { MAIN_PAGE_PATH, ABOUT_PATH, AUTH_PATH } from "../config/constants";
+
 import About from "./About/About";
+import AuthenticationModal from "./AuthenticationModal/AuthenticationModal";
 
 const Routes = (props) => {
   const history = useHistory();
@@ -25,6 +27,8 @@ const Routes = (props) => {
     switch (true) {
       case history.location.pathname === ABOUT_PATH:
         return RouteOptions.GO_TO_ABOUT;
+      case history.location.pathname === AUTH_PATH:
+        return RouteOptions.GO_TO_AUTH;
       default:
         return RouteOptions.GO_TO_HOME;
     }
@@ -39,6 +43,13 @@ const Routes = (props) => {
           <Route to={ABOUT_PATH} component={About} />;
           <Redirect to={ABOUT_PATH} />
         </Switch>
+      );
+    case RouteOptions.GO_TO_AUTH:
+      return (
+          <Switch>
+            <Route to={AUTH_PATH} component={AuthenticationModal} />;
+            <Redirect to={AUTH_PATH} />
+          </Switch>
       );
     default:
       return (
