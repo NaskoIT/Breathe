@@ -1,0 +1,60 @@
+.Navbar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+
+  .CloseBtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    background-color: transparent;
+    border: none;
+    color: white;
+  }
+
+  .AppLogoNavLink {
+    color: lightblue !important;
+    font-size: x-large !important;
+  }
+
+  .NavLink {
+    text-decoration: none;
+    color: white;
+    display: block;
+    margin: 10px 30px;
+    font-size: large;
+    font-weight: bold;
+  }
+
+  .ActiveNavLink {
+    color: greenyellow;
+  }
+}
+
+.NavbarBtn {
+  background-color: transparent;
+  border: none;
+  font-size: x-large;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@media screen and (max-height: 450px) {
+  .Navbar {
+    padding-top: 15px;
+  }
+
+  .Navbar a {
+    font-size: 18px;
+  }
+}
