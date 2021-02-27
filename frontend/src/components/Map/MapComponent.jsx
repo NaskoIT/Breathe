@@ -59,7 +59,6 @@ class MapComponent extends Component {
       const lineLength = parseInt(length(line, { units: "kilometers" }) * 10);
       let span = 1;
       if (lineLength > 0) span = parseInt(dataLength / lineLength);
-
       for (let i = 0; i <= dataLength - span; i += span) {
         this.avoidAreas[name + "-" + i] = {
           southWestCorner: {
@@ -152,7 +151,6 @@ class MapComponent extends Component {
           data: geoJson,
         },
         paint: {
-          // Increase the heatmap weight of each point
           "heatmap-weight": {
             type: "exponential",
             property: "density",
@@ -161,59 +159,7 @@ class MapComponent extends Component {
               [10000, 1],
             ],
           },
-
-          // Increase the heatmap color weight weight by zoom level
-          // heatmap-intensity is a multiplier on top of heatmap-weight
-          // "heatmap-intensity": [
-          //   "interpolate",
-          //   ["linear"],
-          //   ["zoom"],
-          //   0,
-          //   1,
-          //   9,
-          //   3,
-          // ],
-
-          // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-          // Begin color ramp at 0-stop with a 0-transparancy color
-          // to create a blur-like effect.
-          // "heatmap-color": [
-          //   "interpolate",
-          //   ["linear"],
-          //   ["heatmap-density"],
-          //   0,
-          //   "rgba(49, 150, 251, 0)",
-          //   0.2,
-          //   "rgb(49, 150, 251)",
-          //   0.4,
-          //   "rgb(127, 234, 20)",
-          //   0.6,
-          //   "rgb(251, 251, 49)",
-          //   0.8,
-          //   "rgb(251, 150, 49)",
-          //   1,
-          //   "rgb(251, 49, 49)",
-          // ],
-
-          // Adjust the heatmap radius by zoom level
           "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 10, 9, 20],
-
-          // heatmap opacity by zoom level
-          // "heatmap-opacity": [
-          //   "interpolate",
-          //   ["linear"],
-          //   ["zoom"],
-          //   3,
-          //   0, // at zoom level 3 the opacity will be 0
-          //   5,
-          //   0.5,
-          //   10,
-          //   1, // at zoom level 10 the opacity will be 1
-          //   18,
-          //   0.6,
-          //   20,
-          //   0.1,
-          // ],
         },
       });
     });
@@ -276,7 +222,6 @@ class MapComponent extends Component {
     Object.keys(this.avoidAreas).forEach(function (key) {
       areasArray.push(self.avoidAreas[key]);
     });
-
     return areasArray;
   }
 
@@ -364,22 +309,6 @@ class MapComponent extends Component {
     if (this.mapRef.current.getLayer(layerId)) {
       this.mapRef.current.removeLayer(layerId);
       this.mapRef.current.removeSource(layerId);
-    }
-  }
-
-  drawPassengerMarkerOnMap(geoResponse) {
-    if (
-      geoResponse &&
-      geoResponse.addresses &&
-      geoResponse.addresses[0].address.freeformAddress
-    ) {
-      this.findMarker?.remove();
-      this.findMarker = new tt.Marker()
-        .setLngLat(geoResponse.addresses[0].position)
-        .addTo(this.mapRef.current);
-      this.props.setEndRoute(geoResponse.addresses[0].address.freeformAddress);
-      this.props.setWantedLocation(geoResponse.addresses[0].position);
-      this.props.setIsSubmitted(true);
     }
   }
 
