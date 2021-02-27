@@ -9,7 +9,10 @@ export const user = {
 
     login: action((state, payload) => {
         return {...payload};
-    })
+    }),
+    register: action((state, payload) => {
+        return {...payload};
+    }),
 
     /**
      * THUNKS

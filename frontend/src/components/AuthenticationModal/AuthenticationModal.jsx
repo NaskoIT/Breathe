@@ -25,6 +25,7 @@ const AuthenticationModal = (props) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const login = useStoreActions(actions => actions.user.login);
+    const register = useStoreActions(actions => actions.user.register);
 
     const onInput = (e, fieldType) => {
         const inputName = e.target.name;
@@ -59,6 +60,28 @@ const AuthenticationModal = (props) => {
             });
     };
 
+    const onRegister = (e) => {
+        e.preventDefault();
+        const { email, password, confirmPassword } = registerValues;
+
+        if (password !== confirmPassword) {
+            setErrorMessage("Passwords don't match!");
+            e.target.reset();
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(async (userCredential) => {
+                const { email, displayName, uid, refreshToken } = userCredential.user;
+                await register({email, displayName, uid, refreshToken, isLoggedIn: true});
+                history.push('/');
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                setErrorMessage(errorMessage);
+            });
+    };
+
     return (
         <Modal.Dialog>
             <Modal.Header className={classes.Modal}>
@@ -84,22 +107,24 @@ const AuthenticationModal = (props) => {
                     </Tab>
                     <Tab eventKey="register" title="Register" tabClassName={[classes.Tab, classes.RegisterTab].join(' ')}>
                         <div className={classes.RegisterForm}>
-                            <form onSubmit={() => console.log('Registering...')}>
+                            <form onSubmit={onRegister}>
                                 <div className={classes.FieldWrapper}>
                                     <label>Email: </label>
-                                    <input type="text"/>
+                                    <input type="text" name="email" value={registerValues.email} onChange={(e) => onInput(e, 'register')}/>
                                 </div>
                                 <div className={classes.FieldWrapper}>
                                     <label>Password: </label>
-                                    <input type="password"/>
+                                    <input type="password" name="password" value={registerValues.password} onChange={(e) => onInput(e, 'register')}/>
                                 </div>
                                 <div className={[classes.FieldWrapper, classes.ConfirmPassword].join(' ')}>
                                     <label>Confirm Password: </label>
-                                    <input type="password"/>
+                                    <input type="password" name="confirmPassword" value={registerValues.confirmPassword} onChange={(e) => onInput(e, 'register')}/>
                                 </div>
                                 <div className={classes.BtnWrapper}>
                                     <Button type="submit" variant="success">Register</Button>
                                 </div>
+
+                                <p>{errorMessage}</p>
                             </form>
                         </div>
                     </Tab>
