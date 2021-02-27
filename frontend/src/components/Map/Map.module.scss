@@ -29,7 +29,21 @@
 
   .RouteButton {
     position: absolute;
-    top: 30px;
-    right: 0;
+    top: 160px;
+    left: 70.5px;
+
+    display: none;
+    transition: display ease-in 2s;
+    z-index: 10001;
+
+    > button {
+      width: 110px;
+      background-color: rgb(4, 201, 4);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: large;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from "react";
+import React, { useRef, useEffect } from "react";
 import classes from "./NavBar.module.scss";
 import {NavLink, useHistory} from "react-router-dom";
 import {
@@ -13,45 +13,45 @@ import {auth} from '../../firebase';
 import {useStoreActions, useStoreState} from 'easy-peasy';
 
 const NavBar = (props) => {
-    const {isSubmitted, startRoute, endRoute} = useStoreState(
-        (state) => state.navigationStore
-    );
-    const {setIsSubmitted} = useStoreActions(
-        (actions) => actions.navigationStore
-    );
+  const { isSubmitted, startRoute, endRoute } = useStoreState(
+    (state) => state.navigationStore
+  );
+  const { setIsSubmitted } = useStoreActions(
+    (actions) => actions.navigationStore
+  );
 
-    const sideBarRef = useRef(null);
-    const history = useHistory();
+  const sideBarRef = useRef(null);
+  const history = useHistory();
 
-    const { isLoggedIn } = useStoreState(store => store.userStore);
-    const dispatchLogout = useStoreActions(actions => actions.userStore.logout);
+  const { isLoggedIn } = useStoreState((store) => store.userStore);
+  const dispatchLogout = useStoreActions((actions) => actions.userStore.logout);
 
-    useEffect(() => {
-        if (isSubmitted) {
-            openNavbarHandler();
-        }
-    }, [isSubmitted]);
+  useEffect(() => {
+    if (isSubmitted) {
+      openNavbarHandler();
+    }
+  }, [isSubmitted]);
 
-    const closeNavbarHandler = () => {
-        sideBarRef.current.style.width = "0";
-        setIsSubmitted(false);
-    };
+  const closeNavbarHandler = () => {
+    sideBarRef.current.style.width = "0";
+    setIsSubmitted(false);
+  };
 
-    const openNavbarHandler = () => {
-        sideBarRef.current.style.width = "250px";
-    };
+  const openNavbarHandler = () => {
+    sideBarRef.current.style.width = "250px";
+  };
 
-    const renderContent = () => {
-        if (isSubmitted) {
-            return (
-                <React.Fragment>
-                    <form>
-                        <input value={startRoute}/>
-                        <input value={endRoute}/>
-                    </form>
-                </React.Fragment>
-            );
-        }
+  const renderContent = () => {
+    if (isSubmitted) {
+      return (
+        <React.Fragment>
+          <div className={classes.Inputs}>
+            <input value={startRoute} disabled />
+            <input value={endRoute} />
+          </div>
+        </React.Fragment>
+      );
+    }
 
         if (!isLoggedIn) {
             return (
@@ -110,29 +110,31 @@ const NavBar = (props) => {
         }
     };
 
-const logout = () => {
-    auth.signOut().then(async () => {
+  const logout = () => {
+    auth
+      .signOut()
+      .then(async () => {
         await dispatchLogout();
-        history.push('/');
-    }).catch((error) => {
+        history.push("/");
+      })
+      .catch((error) => {
         console.log(error);
-    });
-}
+      });
+  };
 
-return (
+  return (
     <div>
-        <div className={classes.Navbar} ref={sideBarRef}>
-            <button className={classes.CloseBtn} onClick={closeNavbarHandler}>
-                &times;
-            </button>
-            {renderContent()}
-        </div>
-        <button className={classes.NavbarBtn} onClick={openNavbarHandler}>
-            &#9776;
+      <div className={classes.Navbar} ref={sideBarRef}>
+        <button className={classes.CloseBtn} onClick={closeNavbarHandler}>
+          &times;
         </button>
+        {renderContent()}
+      </div>
+      <button className={classes.NavbarBtn} onClick={openNavbarHandler}>
+        &#9776;
+      </button>
     </div>
-);
-
+  );
 };
 
 export default NavBar;
