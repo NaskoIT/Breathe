@@ -10,7 +10,7 @@ namespace Breathe.ConsoleTests
         {
             if (Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") == null)
             {
-                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"C:\Users\evgen\Desktop\Personal\Breathe\server\Breathe\Breathe.BigQuery.Integration\Breathe-BigQuery-Credentials.json");
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @".\Breathe-BigQuery-Credentials-FullAccount.json");
             }
 
             var random = new Random();
