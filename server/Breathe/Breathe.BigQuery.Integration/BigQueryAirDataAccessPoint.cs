@@ -8,7 +8,7 @@ namespace Breathe.BigQuery.Integration
 {
     public class BigQueryAirDataAccessPoint : IAirDataAccessPoint
     {
-        public const string ProjectId = "breathe-306110"; // TODO: Remove hardcoded value
+        public const string ProjectId = "breathe-306118"; // TODO: Remove hardcoded value
         public const string DatasetId = "AirDataEntries";
         public const string TableId = "air_data_entries";
 
@@ -23,8 +23,8 @@ namespace Breathe.BigQuery.Integration
         }
 
         public async Task SaveAirRecordsAsync(IEnumerable<IAirDataItem> items)
-        {
-            var submissionTime = DateTime.UtcNow;
+        { 
+            var submissionTime = DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss");
             var rows = new List<BigQueryInsertRow>();
             foreach (var item in items)
             {
@@ -37,7 +37,7 @@ namespace Breathe.BigQuery.Integration
                                 });
             }
 
-            await this.Table.InsertRowsAsync(rows);
+            var result = await this.Table.InsertRowsAsync(rows);
         }
     }
 }

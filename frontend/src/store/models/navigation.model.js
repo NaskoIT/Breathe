@@ -1,4 +1,5 @@
 import { action } from 'easy-peasy';
+import streetData from '../mocks/street_coords.json';
 
 export const navigationStore = {
     /**
@@ -9,6 +10,7 @@ export const navigationStore = {
     isSubmitted: false,
     currentLocation: '',
     wantedLocation: '',
+    heatMapData: streetData,
 
     /**
      * ACTIONS
@@ -27,5 +29,8 @@ export const navigationStore = {
     }),
     setWantedLocation: action((state, payload) => {
         state.wantedLocation = payload;
+    }),
+    setHeatMapData: action((state, payload) => {
+        state.heatMapData = payload;
     }),
 };
