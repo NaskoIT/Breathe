@@ -20,7 +20,7 @@ const Routes = (props) => {
 
   const [route, setRoute] = useState(null);
 
-  const { isLoggedIn } = useStoreState((store) => store.user);
+  const { isLoggedIn } = useStoreState((store) => store.userStore);
 
   useEffect(() => {
     setRoute(resolveNavigationRoute());
