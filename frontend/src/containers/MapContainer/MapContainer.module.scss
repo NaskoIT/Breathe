@@ -1,0 +1,37 @@
+.Container {
+  height: 100%;
+  position: relative;
+
+  .InputGroup {
+    position: absolute;
+    z-index: 100;
+    width: 300px;
+    left: calc(50% - 150px);
+    top: 10px;
+
+    .Input {
+      font-size: large;
+      padding: 5px 20px;
+      border-radius: 20px;
+      border: 1px solid lightgray;
+      border-right: none;
+
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .InputAppend > span {
+      border-radius: 20px;
+      border: 1px solid lightgray;
+      background-color: white;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      font-size: large;
+      cursor: pointer;
+      padding-left: 0;
+    }
+  }
+}

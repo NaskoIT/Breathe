@@ -8,7 +8,7 @@ const initialState = {
     isLoggedIn: false,
 }
 
-export const user = {
+export const userStore = {
     ...initialState,
 
     login: action((state, payload) => {
