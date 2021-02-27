@@ -3,8 +3,12 @@ import classes from "./NavBar.module.scss";
 import { NavLink } from "react-router-dom";
 import { ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH } from "../../config/constants";
 
+import { useStoreState } from 'easy-peasy';
+
 const NavBar = (props) => {
   const sideBarRef = useRef(null);
+
+  const { isLoggedIn } = useStoreState(store => store.user);
 
   const closeNavbarHandler = () => {
     sideBarRef.current.style.width = "0";
@@ -36,20 +40,33 @@ const NavBar = (props) => {
         >
           About
         </NavLink>
-        <NavLink
-            to={AUTH_PATH}
-            onClick={closeNavbarHandler}
-            className={classes.NavLink}
-        >
-          Login
-        </NavLink>
-        <NavLink
-            to={AUTH_PATH}
-            onClick={closeNavbarHandler}
-            className={classes.NavLink}
-        >
-          Register
-        </NavLink>
+        {!isLoggedIn
+            ?
+            <>
+              <NavLink
+                  to={AUTH_PATH}
+                  onClick={closeNavbarHandler}
+                  className={classes.NavLink}
+              >
+                Login
+              </NavLink>
+              <NavLink
+                  to={AUTH_PATH}
+                  onClick={closeNavbarHandler}
+                  className={classes.NavLink}
+              >
+                Register
+              </NavLink>
+            </>
+            :  <NavLink
+                to={AUTH_PATH}
+                onClick={closeNavbarHandler}
+                className={classes.NavLink}
+            >
+              Log out
+            </NavLink>
+        }
+
       </div>
       <button className={classes.NavbarBtn} onClick={openNavbarHandler}>
         &#9776;
