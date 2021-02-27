@@ -26,7 +26,7 @@ const Routes = (props) => {
     setRoute(resolveNavigationRoute());
 
     // eslint-disable-next-line
-  }, [history.location.pathname]);
+  }, [history.location.pathname, isLoggedIn]);
 
   const resolveNavigationRoute = () => {
     switch (true) {
@@ -62,7 +62,7 @@ const Routes = (props) => {
       return (
         <Switch>
           <Route exact path={MAIN_PAGE_PATH} component={Map} />
-          <Redirect exact path={MAIN_PAGE_PATH} />
+          <Redirect to={MAIN_PAGE_PATH} />
         </Switch>
       );
   }
