@@ -26,6 +26,7 @@ class MapComponent extends Component {
     this.mapRef = React.createRef();
     this.routes = [];
     this.bestRouteIndex = 0;
+    this.findMarker = null;
   }
 
   componentDidMount() {
@@ -72,13 +73,12 @@ class MapComponent extends Component {
           .setLngLat([longitude, latitude])
           .addTo(self.mapRef.current);
 
-        let findMarker = null;
         ttSearchBox.on("tomtom.searchbox.resultscleared", function () {
-          findMarker?.remove();
+          self.findMarker?.remove();
         });
 
         ttSearchBox.on("tomtom.searchbox.resultsfound", async function (data) {
-          findMarker?.remove();
+          self.findMarker?.remove();
           const coords = data?.data?.results?.fuzzySearch?.summary;
           if (coords) {
             services
@@ -87,7 +87,7 @@ class MapComponent extends Component {
                 query: coords.query,
               })
               .then((res) => {
-                findMarker = new tt.Marker()
+                self.findMarker = new tt.Marker()
                   .setLngLat(res.results[0].position)
                   .addTo(self.mapRef.current);
                 self.mapRef.current.flyTo({
@@ -102,6 +102,34 @@ class MapComponent extends Component {
         });
       });
     });
+
+    this.mapRef.current.on("click", function (event) {
+      const position = event.lngLat;
+      services
+        .reverseGeocode({
+          key: API_KEY,
+          position: position,
+        })
+        .then(function (results) {
+          self.drawPassengerMarkerOnMap(results);
+        });
+    });
+  }
+
+  drawPassengerMarkerOnMap(geoResponse) {
+    if (
+      geoResponse &&
+      geoResponse.addresses &&
+      geoResponse.addresses[0].address.freeformAddress
+    ) {
+      this.findMarker?.remove();
+      this.findMarker = new tt.Marker()
+        .setLngLat(geoResponse.addresses[0].position)
+        .addTo(this.mapRef.current);
+      this.props.setEndRoute(geoResponse.addresses[0].address.freeformAddress);
+      this.props.setWantedLocation(geoResponse.addresses[0].position);
+      this.props.setIsSubmitted(true);
+    }
   }
 
   processMatrixResponse = (result) => {
