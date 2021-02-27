@@ -225,6 +225,34 @@ class MapComponent extends Component {
           self.drawPassengerMarkerOnMap(results);
         });
     });
+
+    this.mapRef.current.on("click", function (event) {
+      const position = event.lngLat;
+      services
+        .reverseGeocode({
+          key: API_KEY,
+          position: position,
+        })
+        .then(function (results) {
+          self.drawPassengerMarkerOnMap(results);
+        });
+    });
+  }
+
+  drawPassengerMarkerOnMap(geoResponse) {
+    if (
+      geoResponse &&
+      geoResponse.addresses &&
+      geoResponse.addresses[0].address.freeformAddress
+    ) {
+      this.findMarker?.remove();
+      this.findMarker = new tt.Marker()
+        .setLngLat(geoResponse.addresses[0].position)
+        .addTo(this.mapRef.current);
+      this.props.setEndRoute(geoResponse.addresses[0].address.freeformAddress);
+      this.props.setWantedLocation(geoResponse.addresses[0].position);
+      this.props.setIsSubmitted(true);
+    }
   }
 
   drawAreas() {
