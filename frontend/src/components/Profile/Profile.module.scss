@@ -1,0 +1,59 @@
+.ProfileContainer {
+  padding: 100px 100px;
+  text-align: center;
+  font-family: cursive;
+
+  .Header {
+    margin-bottom: 140px;
+
+    p {
+      margin-top: 20px;
+      font-size: 24px;
+      font-family: cursive;
+      color: gray;
+    }
+
+    span {
+      color: green;
+    }
+  }
+
+  .Progress {
+    width: 100%;
+    margin-bottom: 100px;
+
+    p {
+      font-size: 24px;
+      font-family: cursive;
+      color: gray;
+    }
+
+    span {
+      color: green;
+    }
+
+    .Bar {
+      height: 30px;
+      width: 70%;
+      margin: 0 auto;
+
+      >div {
+        font-size: 18px;
+        width: 63%;
+        font-weight: bold;
+        font-family: cursive;
+      }
+    }
+  }
+
+  .ChartsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    height: 500px;
+
+    div {
+      flex: 0 0 45%;
+    }
+  }
+}
