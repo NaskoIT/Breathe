@@ -11,9 +11,12 @@ const MapContainer = (props) => {
     setCurrentLocation,
     setWantedLocation,
   } = useStoreActions((actions) => actions.navigationStore);
-  const { currentLocation, wantedLocation, heatMapData } = useStoreState(
-    (state) => state.navigationStore
-  );
+  const {
+    currentLocation,
+    wantedLocation,
+    heatMapData,
+    isSubmitted,
+  } = useStoreState((state) => state.navigationStore);
 
   return (
     <div className={classes.Container}>
@@ -26,6 +29,7 @@ const MapContainer = (props) => {
         setWantedLocation={setWantedLocation}
         wantedLocation={wantedLocation}
         heatMapData={heatMapData}
+        isSubmitted={isSubmitted}
       />
     </div>
   );

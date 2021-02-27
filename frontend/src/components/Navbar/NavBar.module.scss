@@ -10,6 +10,28 @@
   padding-top: 60px;
   z-index: 10001;
 
+  .Inputs {
+    margin: auto;
+    width: 170px;
+
+    input {
+      width: 170px;
+      border: 1px solid lightgray;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      font-size: large;
+      padding: 5px 10px;
+
+      &:focus {
+        outline: none;
+      }
+
+      &:disabled {
+        background-color: whitesmoke;
+      }
+    }
+  }
+
   .CloseBtn {
     position: absolute;
     top: 0;

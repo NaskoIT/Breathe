@@ -4,7 +4,7 @@ import { API_KEY } from "../../config/constants";
 import tt from "@tomtom-international/web-sdk-maps";
 import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
 import { services } from "@tomtom-international/web-sdk-services";
-import bboxPolygon from "@turf/bbox-polygon";
+import { bboxPolygon, lineString, length } from "@turf/turf";
 
 const ttSearchBox = new SearchBox(services, {
   idleTimePress: 1000,
@@ -49,12 +49,18 @@ class MapComponent extends Component {
     this.mapRef.current.addControl(new tt.NavigationControl());
     this.mapRef.current.addControl(ttSearchBox, "top-left");
 
-    console.log(heatMapData);
     const features = [];
     Object.keys(heatMapData).forEach((name) => {
-      const length = heatMapData[name].length;
-      const span = parseInt(length / 5 - 1);
-      for (let i = 0; i < length - span - 1; i += span) {
+      const dataLength = heatMapData[name].length;
+      const line = lineString([
+        heatMapData[name][0],
+        heatMapData[name][dataLength - 1],
+      ]);
+      const lineLength = parseInt(length(line, { units: "kilometers" }) * 10);
+      let span = 1;
+      if (lineLength > 0) span = parseInt(dataLength / lineLength);
+
+      for (let i = 0; i <= dataLength - span; i += span) {
         this.avoidAreas[name + "-" + i] = {
           southWestCorner: {
             latitude: heatMapData[name][i][1],
@@ -147,68 +153,67 @@ class MapComponent extends Component {
         },
         paint: {
           // Increase the heatmap weight of each point
-          "heatmap-weight": 0.6,
+          "heatmap-weight": {
+            type: "exponential",
+            property: "density",
+            stops: [
+              [1, 0],
+              [10000, 1],
+            ],
+          },
 
           // Increase the heatmap color weight weight by zoom level
           // heatmap-intensity is a multiplier on top of heatmap-weight
-          "heatmap-intensity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            0,
-            1,
-            9,
-            3,
-          ],
+          // "heatmap-intensity": [
+          //   "interpolate",
+          //   ["linear"],
+          //   ["zoom"],
+          //   0,
+          //   1,
+          //   9,
+          //   3,
+          // ],
 
           // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
           // Begin color ramp at 0-stop with a 0-transparancy color
           // to create a blur-like effect.
-          "heatmap-color": [
-            "interpolate",
-            ["linear"],
-            ["heatmap-density"],
-            0,
-            "rgba(49, 150, 251, 0)",
-            0.2,
-            "rgb(49, 150, 251)",
-            0.4,
-            "rgb(127, 234, 20)",
-            0.6,
-            "rgb(251, 251, 49)",
-            0.8,
-            "rgb(251, 150, 49)",
-            1,
-            "rgb(251, 49, 49)",
-          ],
+          // "heatmap-color": [
+          //   "interpolate",
+          //   ["linear"],
+          //   ["heatmap-density"],
+          //   0,
+          //   "rgba(49, 150, 251, 0)",
+          //   0.2,
+          //   "rgb(49, 150, 251)",
+          //   0.4,
+          //   "rgb(127, 234, 20)",
+          //   0.6,
+          //   "rgb(251, 251, 49)",
+          //   0.8,
+          //   "rgb(251, 150, 49)",
+          //   1,
+          //   "rgb(251, 49, 49)",
+          // ],
 
           // Adjust the heatmap radius by zoom level
-          "heatmap-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            0,
-            2,
-            9,
-            20, // at zoom level 9 the radius will be 20px
-          ],
+          "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 10, 9, 20],
 
           // heatmap opacity by zoom level
-          "heatmap-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            3,
-            0, // at zoom level 3 the opacity will be 0
-            5,
-            0.5,
-            10,
-            1, // at zoom level 10 the opacity will be 1
-            18,
-            0.6,
-            20,
-            0.1,
-          ],
+          // "heatmap-opacity": [
+          //   "interpolate",
+          //   ["linear"],
+          //   ["zoom"],
+          //   3,
+          //   0, // at zoom level 3 the opacity will be 0
+          //   5,
+          //   0.5,
+          //   10,
+          //   1, // at zoom level 10 the opacity will be 1
+          //   18,
+          //   0.6,
+          //   20,
+          //   0.1,
+          // ],
         },
       });
     });
@@ -514,15 +519,15 @@ class MapComponent extends Component {
     return (
       <div className={classes.MapContainer}>
         <div id="map" className={classes.Map}></div>
-        <div className={classes.RouteButton}>
-          <label>Find the taxi that will arrive fastest</label>
-          <div id="route-labels"></div>
-          <input
-            type="button"
-            id="submit-button"
-            value="Submit"
-            onClick={this.submitClickedHandler}
-          />
+        <div
+          className={classes.RouteButton}
+          style={
+            this.props.isSubmitted ? { display: "block" } : { display: "none" }
+          }
+        >
+          <button id="submit-button" onClick={this.submitClickedHandler}>
+            Find route
+          </button>
         </div>
       </div>
     );
