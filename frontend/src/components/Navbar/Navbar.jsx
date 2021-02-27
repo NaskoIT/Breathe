@@ -16,7 +16,7 @@ const NavBar = (props) => {
     const sideBarRef = useRef(null);
     const history = useHistory();
 
-    const {isLoggedIn} = useStoreState(store => store.userStore);
+    const { isLoggedIn } = useStoreState(store => store.userStore);
     const dispatchLogout = useStoreActions(actions => actions.userStore.logout);
 
     useEffect(() => {

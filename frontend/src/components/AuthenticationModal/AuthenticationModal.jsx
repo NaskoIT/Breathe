@@ -34,8 +34,8 @@ const AuthenticationModal = (props) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
-    const login = useStoreActions(actions => actions.user.login);
-    const register = useStoreActions(actions => actions.user.register);
+    const login = useStoreActions(actions => actions.userStore.login);
+    const register = useStoreActions(actions => actions.userStore.register);
 
     const onInput = (e, fieldType) => {
         const inputName = e.target.name;
