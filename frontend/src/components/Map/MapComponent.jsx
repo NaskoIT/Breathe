@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import classes from "./Map.module.scss";
 import { API_KEY } from "../../config/constants";
-import { isMobile, isTablet } from "react-device-detect";
 import tt from "@tomtom-international/web-sdk-maps";
 import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
 import { services } from "@tomtom-international/web-sdk-services";
+import { along, lineString } from "@turf/turf";
 
 const ttSearchBox = new SearchBox(services, {
   idleTimePress: 1000,
@@ -27,6 +27,7 @@ class MapComponent extends Component {
     this.routes = [];
     this.bestRouteIndex = 0;
     this.findMarker = null;
+    this.avoidAreas = {};
   }
 
   componentDidMount() {
@@ -42,7 +43,6 @@ class MapComponent extends Component {
     this.mapRef.current = tt.map({
       key: API_KEY,
       container: "map",
-      dragPan: !(isMobile || isTablet),
     });
 
     this.mapRef.current.addControl(new tt.FullscreenControl());
@@ -50,10 +50,9 @@ class MapComponent extends Component {
     this.mapRef.current.addControl(ttSearchBox, "top-left");
 
     const features = [];
-    const avoidAreas = {};
     Object.keys(heatMapData).forEach((name) => {
       const length = heatMapData[name].length;
-      avoidAreas[name] = {
+      this.avoidAreas[name] = {
         southWestCorner: {
           latitude: heatMapData[name][0][0],
           longitude: heatMapData[name][0][1],
@@ -67,13 +66,12 @@ class MapComponent extends Component {
         features.push({
           geometry: {
             type: "Point",
-            coordinates: [obj[1], obj[0]],
+            coordinates: obj,
           },
           properties: {},
         });
       });
     });
-    console.log(avoidAreas);
 
     const geoJson = {
       type: "FeatureCollection",
@@ -127,8 +125,9 @@ class MapComponent extends Component {
                   center: res.results[0].position,
                   zoom: 11,
                 });
+                const wanted = res.results[0].position;
                 setEndRoute(coords.query);
-                setWantedLocation(res.results[0].position);
+                setWantedLocation(wanted);
                 setIsSubmitted(true);
               });
           }
@@ -222,6 +221,117 @@ class MapComponent extends Component {
           self.drawPassengerMarkerOnMap(results);
         });
     });
+  }
+
+  drawAreas() {
+    const self = this;
+    Object.keys(this.avoidAreas).forEach(function (key) {
+      if (!self.mapRef.current.getLayer(key)) {
+        self.drawAreaPolygon(key);
+      }
+    });
+  }
+
+  getChosenAreas() {
+    var areasArray = [];
+
+    const self = this;
+    Object.keys(this.avoidAreas).forEach(function (key) {
+      areasArray.push(self.avoidAreas[key]);
+    });
+
+    return areasArray;
+  }
+
+  serviceCall(currentLocation, wantedLocation) {
+    this.removeLayer("route");
+    const self = this;
+
+    services
+      .calculateRoute({
+        key: API_KEY,
+        traffic: false,
+        locations: [currentLocation, wantedLocation],
+        avoidAreas: self.getChosenAreas(),
+      })
+      .then(function (response) {
+        const geojson = response.toGeoJson();
+
+        self.mapRef.current.addLayer({
+          id: "route",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: geojson,
+          },
+          paint: {
+            "line-color": "blue",
+            "line-width": routeWeight,
+          },
+        });
+
+        self.drawAreas();
+
+        const bounds = new tt.LngLatBounds();
+        geojson.features[0].geometry.coordinates.forEach(function (point) {
+          bounds.extend(tt.LngLat.convert(point));
+        });
+
+        self.mapRef.current.fitBounds(bounds, {
+          duration: 0,
+          padding: { left: 350, bottom: 50, top: 50, right: 50 },
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  drawAreaPolygon(areaName) {
+    const data = this.props.heatMapData[areaName];
+    var line = lineString(data);
+    console.log(data);
+    console.log(line);
+
+    // var areaPolygon = bboxPolygon([
+    //   area.southWestCorner.longitude,
+    //   area.southWestCorner.latitude,
+    //   area.northEastCorner.longitude,
+    //   area.northEastCorner.latitude,
+    // ]);
+    const alongLine = along(line, 0.1, { units: "kilometers" });
+
+    this.mapRef.current.addLayer({
+      id: areaName,
+      type: "fill",
+      source: {
+        type: "geojson",
+        data: alongLine,
+      },
+      paint: {
+        "fill-color": "red",
+        "fill-opacity": 0.5,
+      },
+    });
+    this.mapRef.current.addLayer({
+      id: areaName + "-border",
+      type: "line",
+      source: {
+        type: "geojson",
+        data: alongLine,
+      },
+      paint: {
+        "line-color": "blue",
+        "line-width": 2,
+      },
+    });
+  }
+
+  removeLayer(layerId) {
+    if (this.mapRef.current.getLayer(layerId)) {
+      this.mapRef.current.removeLayer(layerId);
+      this.mapRef.current.removeSource(layerId);
+    }
   }
 
   drawPassengerMarkerOnMap(geoResponse) {
@@ -393,7 +503,11 @@ class MapComponent extends Component {
   }
 
   submitClickedHandler = () => {
-    this.callMatrix();
+    // this.callMatrix();
+    this.serviceCall(
+      [this.props.currentLocation.lng, this.props.currentLocation.lat],
+      [this.props.wantedLocation.lng, this.props.wantedLocation.lat]
+    );
   };
 
   render() {
