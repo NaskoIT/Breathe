@@ -20,7 +20,7 @@ const ttSearchBox = new SearchBox(services, {
 const routeWeight = 9;
 const routeBackgroundWeight = 12;
 
-class Map extends Component {
+class MapComponent extends Component {
   constructor(props) {
     super(props);
     this.mapRef = React.createRef();
@@ -280,4 +280,4 @@ class Map extends Component {
   }
 }
 
-export default Map;
+export default MapComponent;

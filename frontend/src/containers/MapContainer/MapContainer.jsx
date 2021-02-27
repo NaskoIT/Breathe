@@ -1,5 +1,5 @@
 import React from "react";
-import Map from "../../components/Map/Map";
+import MapComponent from "../../components/Map/MapComponent";
 import classes from "./MapContainer.module.scss";
 import { useStoreActions, useStoreState } from "easy-peasy";
 
@@ -17,7 +17,7 @@ const MapContainer = (props) => {
 
   return (
     <div className={classes.Container}>
-      <Map
+      <MapComponent
         setEndRoute={setEndRoute}
         setIsSubmitted={setIsSubmitted}
         setStartRoute={setStartRoute}

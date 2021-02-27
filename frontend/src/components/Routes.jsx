@@ -52,7 +52,7 @@ const Routes = (props) => {
     case RouteOptions.GO_TO_AUTH:
       return (
         <Switch>
-          <Route exact path={MAIN_PAGE_PATH} component={Map} />;
+          <Route exact path={MAIN_PAGE_PATH} component={MapContainer} />;
           <Route exact path={ABOUT_PATH} component={About} />;
           <Route exact path={AUTH_PATH} component={AuthenticationModal} />;
           <Redirect to={AUTH_PATH} />
