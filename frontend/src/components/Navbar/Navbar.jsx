@@ -1,7 +1,14 @@
 import React, {useRef, useEffect} from "react";
 import classes from "./NavBar.module.scss";
 import {NavLink, useHistory} from "react-router-dom";
-import {ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH, LOGOUT_PATH, REGISTER_PATH} from "../../config/constants";
+import {
+    ABOUT_PATH,
+    MAIN_PAGE_PATH,
+    LOGOUT_PATH,
+    REGISTER_PATH,
+    PROFILE_PATH,
+    LOGIN_PATH
+} from "../../config/constants";
 import {auth} from '../../firebase';
 import {useStoreActions, useStoreState} from 'easy-peasy';
 
@@ -50,7 +57,15 @@ const NavBar = (props) => {
             return (
                 <React.Fragment>
                     <NavLink
-                        to={AUTH_PATH}
+                        to={MAIN_PAGE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Map
+                    </NavLink>
+                    <NavLink
+                        to={LOGIN_PATH}
                         onClick={closeNavbarHandler}
                         className={classes.NavLink}
                     >
@@ -67,6 +82,22 @@ const NavBar = (props) => {
         } else {
             return (
                 <React.Fragment>
+                    <NavLink
+                        to={MAIN_PAGE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Map
+                    </NavLink>
+                    <NavLink
+                        to={PROFILE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Profile
+                    </NavLink>
                     <NavLink
                         to={LOGOUT_PATH}
                         onClick={logout}
