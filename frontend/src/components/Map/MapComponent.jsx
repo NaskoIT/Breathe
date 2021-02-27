@@ -107,7 +107,7 @@ class MapComponent extends Component {
 
         self.mapRef.current.flyTo({
           center: [longitude, latitude],
-          zoom: 11,
+          zoom: 12,
         });
         new tt.Marker()
           .setLngLat([longitude, latitude])
