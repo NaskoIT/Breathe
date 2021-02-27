@@ -1,12 +1,14 @@
-import { action, thunk } from 'easy-peasy';
+import { action } from 'easy-peasy';
 
 export const navigationStore = {
     /**
      * STATE
      */
-    startRoute: '',
+    startRoute: 'Your location',
     endRoute: '',
     isSubmitted: false,
+    currentLocation: '',
+    wantedLocation: '',
 
     /**
      * ACTIONS
@@ -20,8 +22,10 @@ export const navigationStore = {
     setIsSubmitted: action((state, payload) => {
         state.isSubmitted = payload;
     }),
-
-    /**
-     * THUNKS
-     */
+    setCurrentLocation: action((state, payload) => {
+        state.currentLocation = payload;
+    }),
+    setWantedLocation: action((state, payload) => {
+        state.wantedLocation = payload;
+    }),
 };
