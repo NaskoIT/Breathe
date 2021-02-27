@@ -6,7 +6,7 @@ import {
   Switch,
   useHistory,
 } from "react-router-dom";
-import { useStoreState } from 'easy-peasy';
+import { useStoreState } from "easy-peasy";
 
 import { RouteOptions } from "../utils/enums";
 import { MAIN_PAGE_PATH, ABOUT_PATH, AUTH_PATH } from "../config/constants";
@@ -20,7 +20,7 @@ const Routes = (props) => {
 
   const [route, setRoute] = useState(null);
 
-  const { isLoggedIn } = useStoreState(store => store.user);
+  const { isLoggedIn } = useStoreState((store) => store.user);
 
   useEffect(() => {
     setRoute(resolveNavigationRoute());
@@ -51,17 +51,17 @@ const Routes = (props) => {
       );
     case RouteOptions.GO_TO_AUTH:
       return (
-          <Switch>
-            <Route exact path={MAIN_PAGE_PATH} component={Map} />;
-            <Route exact path={ABOUT_PATH} component={About} />;
-            <Route exact path={AUTH_PATH} component={AuthenticationModal} />;
-            <Redirect to={AUTH_PATH} />
-          </Switch>
+        <Switch>
+          <Route exact path={MAIN_PAGE_PATH} component={Map} />;
+          <Route exact path={ABOUT_PATH} component={About} />;
+          <Route exact path={AUTH_PATH} component={AuthenticationModal} />;
+          <Redirect to={AUTH_PATH} />
+        </Switch>
       );
     default:
       return (
         <Switch>
-          <Route exact to={MAIN_PAGE_PATH} component={MapContainer} />
+          <Route exact path={MAIN_PAGE_PATH} component={MapContainer} />
           <Redirect to={MAIN_PAGE_PATH} />
         </Switch>
       );
