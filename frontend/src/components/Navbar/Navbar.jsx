@@ -1,15 +1,16 @@
 import React, { useRef, useEffect } from "react";
 import classes from "./NavBar.module.scss";
-import { NavLink, useHistory } from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import {
-  ABOUT_PATH,
-  MAIN_PAGE_PATH,
-  AUTH_PATH,
-  LOGOUT_PATH,
-  REGISTER_PATH,
+    ABOUT_PATH,
+    MAIN_PAGE_PATH,
+    LOGOUT_PATH,
+    REGISTER_PATH,
+    PROFILE_PATH,
+    LOGIN_PATH
 } from "../../config/constants";
-import { auth } from "../../firebase";
-import { useStoreActions, useStoreState } from "easy-peasy";
+import {auth} from '../../firebase';
+import {useStoreActions, useStoreState} from 'easy-peasy';
 
 const NavBar = (props) => {
   const { isSubmitted, startRoute, endRoute } = useStoreState(
@@ -52,39 +53,62 @@ const NavBar = (props) => {
       );
     }
 
-    if (!isLoggedIn) {
-      return (
-        <React.Fragment>
-          <NavLink
-            to={AUTH_PATH}
-            onClick={closeNavbarHandler}
-            className={classes.NavLink}
-          >
-            Login
-          </NavLink>
-          <NavLink
-            to={REGISTER_PATH}
-            onClick={closeNavbarHandler}
-            className={classes.NavLink}
-          >
-            Register
-          </NavLink>
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <NavLink
-            to={LOGOUT_PATH}
-            onClick={logout}
-            className={classes.NavLink}
-          >
-            Log out
-          </NavLink>
-        </React.Fragment>
-      );
-    }
-  };
+        if (!isLoggedIn) {
+            return (
+                <React.Fragment>
+                    <NavLink
+                        to={MAIN_PAGE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Map
+                    </NavLink>
+                    <NavLink
+                        to={LOGIN_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                    >
+                        Login
+                    </NavLink>
+                    <NavLink
+                        to={REGISTER_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                    >
+                        Register
+                    </NavLink>
+                </React.Fragment>)
+        } else {
+            return (
+                <React.Fragment>
+                    <NavLink
+                        to={MAIN_PAGE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Map
+                    </NavLink>
+                    <NavLink
+                        to={PROFILE_PATH}
+                        onClick={closeNavbarHandler}
+                        className={classes.NavLink}
+                        activeClassName={classes.NavLink}
+                    >
+                        Profile
+                    </NavLink>
+                    <NavLink
+                        to={LOGOUT_PATH}
+                        onClick={logout}
+                        className={classes.NavLink}
+                    >
+                        Log out
+                    </NavLink>
+                </React.Fragment>
+            );
+        }
+    };
 
   const logout = () => {
     auth
