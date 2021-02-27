@@ -3,5 +3,33 @@
 
   .Map {
     height: 100%;
+
+    > div:last-of-type > div:first-of-type {
+      left: calc(50% - 150px);
+      top: 10px;
+
+      > div,
+      > div > div {
+        margin: 0;
+        width: 300px;
+        border-radius: 20px;
+      }
+
+      > div > div {
+        border: 1px solid lightgray;
+        border-right: none;
+      }
+
+      input {
+        font-size: large;
+        padding: 5px 20px;
+      }
+    }
+  }
+
+  .RouteButton {
+    position: absolute;
+    top: 30px;
+    right: 0;
   }
 }
