@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import classes from "./NavBar.module.scss";
 import {NavLink, useHistory} from "react-router-dom";
-import {ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH, LOGOUT_PATH} from "../../config/constants";
+import {ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH, LOGOUT_PATH, REGISTER_PATH} from "../../config/constants";
 
 import {auth} from '../../firebase';
 
@@ -66,7 +66,7 @@ const NavBar = (props) => {
                 Login
               </NavLink>
               <NavLink
-                  to={AUTH_PATH}
+                  to={REGISTER_PATH}
                   onClick={closeNavbarHandler}
                   className={classes.NavLink}
               >

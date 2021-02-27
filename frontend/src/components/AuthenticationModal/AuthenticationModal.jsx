@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useHistory } from "react-router-dom";
 import { useStoreActions } from 'easy-peasy';
 
@@ -11,6 +11,16 @@ const AuthenticationModal = (props) => {
 
     const history = useHistory();
 
+    const [activeTab, setActiveTab] = useState('login');
+
+    useEffect(() => {
+        setActiveTab(history.location.search?.substring(1));
+    }, [history.location.search]);
+
+    const selectTab = (tabName) => {
+        setActiveTab(tabName);
+    }
+    
     const [loginValues, setLoginValues] = useState({
         email: '',
         password: ''
@@ -85,7 +95,7 @@ const AuthenticationModal = (props) => {
     return (
         <Modal.Dialog>
             <Modal.Header className={classes.Modal}>
-                <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className={classes.Tabs}>
+                <Tabs activeKey={activeTab ? activeTab : 'login'} className={classes.Tabs} onSelect={selectTab}>
                     <Tab eventKey="login" title="Login" tabClassName={[classes.Tab, classes.LoginTab].join(' ')}>
                         <div className={classes.LoginForm}>
                             <form onSubmit={onLogin}>
