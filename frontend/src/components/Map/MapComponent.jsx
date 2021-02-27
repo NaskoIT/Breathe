@@ -40,7 +40,6 @@ class MapComponent extends Component {
     this.mapRef.current = tt.map({
       key: API_KEY,
       container: "map",
-      dragPan: !(isMobile || isTablet),
     });
 
     this.mapRef.current.addControl(new tt.FullscreenControl());
