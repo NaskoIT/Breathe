@@ -1,6 +1,6 @@
 import { action, thunk } from 'easy-peasy';
 
-export const user = {
+export const userStore = {
     /**
      * STATE
      */

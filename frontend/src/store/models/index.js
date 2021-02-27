@@ -1,3 +1,6 @@
-import { user } from './user.model';
+import { userStore } from './user.model';
+import { navigationStore } from './navigation.model';
 
-export default { user };
+
+// eslint-disable-next-line
+export default { userStore, navigationStore };
