@@ -220,7 +220,8 @@ class MapComponent extends Component {
 
     const self = this;
     Object.keys(this.avoidAreas).forEach(function (key) {
-      if (!key.includes("Scapto")) areasArray.push(self.avoidAreas[key]);
+      if (key.includes("kitka") || key.includes("DOGECOIN"))
+        areasArray.push(self.avoidAreas[key]);
     });
     return areasArray;
   }
