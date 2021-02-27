@@ -45,6 +45,16 @@
       }
     }
 
+    .ConfirmPassword {
+      label {
+        width: 50%;
+      }
+
+      input {
+        width: 50%;
+      }
+    }
+
     .BtnWrapper {
       width: 30%;
       margin: 0 auto;
@@ -53,6 +63,11 @@
       button {
         width: 100%;
       }
+    }
+
+    p {
+      color: red;
+      margin-top: 20px;
     }
   }
 }

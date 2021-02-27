@@ -1,13 +1,15 @@
 import { action, thunk } from 'easy-peasy';
 
 export const user = {
-    /**
-     * STATE
-     */
+    uid: '',
+    email: '',
+    displayName: '',
+    refreshToken: '',
+    isLoggedIn: false,
 
-    /**
-     * ACTIONS
-     */
+    login: action((state, payload) => {
+        return {...payload};
+    })
 
     /**
      * THUNKS
