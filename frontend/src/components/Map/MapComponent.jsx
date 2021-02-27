@@ -212,6 +212,7 @@ class MapComponent extends Component {
 
     this.mapRef.current.on("click", function (event) {
       const position = event.lngLat;
+      console.log(position);
       services
         .reverseGeocode({
           key: API_KEY,
