@@ -10,6 +10,8 @@
     "@tomtom-international/web-sdk-maps": "^6.6.0",
     "@tomtom-international/web-sdk-plugin-searchbox": "^3.1.9",
     "@tomtom-international/web-sdk-services": "^6.6.0",
+    "@turf/bbox-polygon": "^6.3.0",
+    "@turf/turf": "^6.3.0",
     "bootstrap": "^4.6.0",
     "easy-peasy": "^5.0.1",
     "firebase": "^8.2.9",
