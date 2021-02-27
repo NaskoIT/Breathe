@@ -9,6 +9,7 @@ import {
 import { RouteOptions } from "../utils/enums";
 import { MAIN_PAGE_PATH, ABOUT_PATH } from "../config/constants";
 import About from "./About/About";
+import Map from "./Map/Map";
 
 const Routes = (props) => {
   const history = useHistory();
@@ -43,6 +44,7 @@ const Routes = (props) => {
     default:
       return (
         <Switch>
+          <Route to={MAIN_PAGE_PATH} component={Map} />
           <Redirect to={MAIN_PAGE_PATH} />
         </Switch>
       );
