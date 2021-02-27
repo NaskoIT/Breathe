@@ -1,11 +1,15 @@
-import { action, thunk } from 'easy-peasy';
+import { action } from 'easy-peasy';
 
-export const user = {
+const initialState = {
     uid: '',
     email: '',
     displayName: '',
     refreshToken: '',
     isLoggedIn: false,
+}
+
+export const user = {
+    ...initialState,
 
     login: action((state, payload) => {
         return {...payload};
@@ -13,8 +17,7 @@ export const user = {
     register: action((state, payload) => {
         return {...payload};
     }),
-
-    /**
-     * THUNKS
-     */
+    logout: action((state, _) => {
+        return initialState;
+    }),
 };
