@@ -11,7 +11,7 @@ const MapContainer = (props) => {
     setCurrentLocation,
     setWantedLocation,
   } = useStoreActions((actions) => actions.navigationStore);
-  const { currentLocation, wantedLocation } = useStoreState(
+  const { currentLocation, wantedLocation, heatMapData } = useStoreState(
     (state) => state.navigationStore
   );
 
@@ -25,6 +25,7 @@ const MapContainer = (props) => {
         currentLocation={currentLocation}
         setWantedLocation={setWantedLocation}
         wantedLocation={wantedLocation}
+        heatMapData={heatMapData}
       />
     </div>
   );

@@ -36,6 +36,7 @@ class MapComponent extends Component {
       setCurrentLocation,
       setStartRoute,
       setWantedLocation,
+      heatMapData,
     } = this.props;
 
     this.mapRef.current = tt.map({
@@ -47,6 +48,37 @@ class MapComponent extends Component {
     this.mapRef.current.addControl(new tt.FullscreenControl());
     this.mapRef.current.addControl(new tt.NavigationControl());
     this.mapRef.current.addControl(ttSearchBox, "top-left");
+
+    const features = [];
+    const avoidAreas = {};
+    Object.keys(heatMapData).forEach((name) => {
+      const length = heatMapData[name].length;
+      avoidAreas[name] = {
+        southWestCorner: {
+          latitude: heatMapData[name][0][0],
+          longitude: heatMapData[name][0][1],
+        },
+        northEastCorner: {
+          latitude: heatMapData[name][length - 1][0],
+          longitude: heatMapData[name][length - 1][1],
+        },
+      };
+      heatMapData[name].forEach((obj) => {
+        features.push({
+          geometry: {
+            type: "Point",
+            coordinates: [obj[1], obj[0]],
+          },
+          properties: {},
+        });
+      });
+    });
+    console.log(avoidAreas);
+
+    const geoJson = {
+      type: "FeatureCollection",
+      features: features,
+    };
 
     const self = this;
     this.mapRef.current.on("load", () => {
@@ -101,6 +133,80 @@ class MapComponent extends Component {
               });
           }
         });
+      });
+
+      self.mapRef.current.addLayer({
+        id: "heatmap",
+        type: "heatmap",
+        source: {
+          type: "geojson",
+          data: geoJson,
+        },
+        paint: {
+          // Increase the heatmap weight of each point
+          "heatmap-weight": 0.6,
+
+          // Increase the heatmap color weight weight by zoom level
+          // heatmap-intensity is a multiplier on top of heatmap-weight
+          "heatmap-intensity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0,
+            1,
+            9,
+            3,
+          ],
+
+          // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+          // Begin color ramp at 0-stop with a 0-transparancy color
+          // to create a blur-like effect.
+          "heatmap-color": [
+            "interpolate",
+            ["linear"],
+            ["heatmap-density"],
+            0,
+            "rgba(49, 150, 251, 0)",
+            0.2,
+            "rgb(49, 150, 251)",
+            0.4,
+            "rgb(127, 234, 20)",
+            0.6,
+            "rgb(251, 251, 49)",
+            0.8,
+            "rgb(251, 150, 49)",
+            1,
+            "rgb(251, 49, 49)",
+          ],
+
+          // Adjust the heatmap radius by zoom level
+          "heatmap-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0,
+            2,
+            9,
+            20, // at zoom level 9 the radius will be 20px
+          ],
+
+          // heatmap opacity by zoom level
+          "heatmap-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            3,
+            0, // at zoom level 3 the opacity will be 0
+            5,
+            0.5,
+            10,
+            1, // at zoom level 10 the opacity will be 1
+            18,
+            0.6,
+            20,
+            0.1,
+          ],
+        },
       });
     });
 
