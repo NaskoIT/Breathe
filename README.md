@@ -12,3 +12,23 @@ Explore the air quality of given a location.
 
 Generate heatmap about the air quality using data from a lot of gas sensors which are attached to vechicles.
 Suggest best routes considering the air quality in the area.
+
+# Current solution
+- The current soutions use static sensors and the air quality measurements is not detailed enough.
+
+# Results
+- People will be more aware of the air quality.
+- People will contribute for measuring air polution.
+
+# Technologies
+- React
+- Arduino and IoT
+- Big Data
+- BigQuery
+- ASP.NET Core
+- Data visualization
+
+
+
+
+
