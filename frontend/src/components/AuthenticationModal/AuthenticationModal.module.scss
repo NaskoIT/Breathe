@@ -1,0 +1,75 @@
+.Modal {
+  display: flex;
+  flex-wrap: wrap;
+
+  >div{
+    width: 100%;
+  }
+
+  .Tabs {
+    flex: 0 0 100%;
+    display: flex;
+
+    div.tabs-content {
+      width: 100%;
+    }
+
+    .Tab {
+      display: flex;
+      flex: 0 0 50%;
+
+      div {
+        width: 100%;
+      }
+    }
+  }
+
+  .tab-content {
+    width: 100%;
+  }
+
+  .LoginForm, .RegisterForm {
+    padding: 30px;
+
+    .FieldWrapper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      label {
+        width: 30%;
+      }
+
+      input {
+        width: 70%;
+      }
+    }
+
+    .ConfirmPassword {
+      label {
+        width: 50%;
+      }
+
+      input {
+        width: 50%;
+      }
+    }
+
+    .BtnWrapper {
+      width: 30%;
+      margin: 0 auto;
+      margin-top: 30px;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    p {
+      color: red;
+      margin-top: 20px;
+    }
+  }
+}
+
+
