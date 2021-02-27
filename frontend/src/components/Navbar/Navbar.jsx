@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import classes from "./NavBar.module.scss";
-import { NavLink } from "react-router-dom";
-import { ABOUT_PATH, MAIN_PAGE_PATH } from "../../config/constants";
-import { useStoreState, useStoreActions } from "easy-peasy";
+import {NavLink, useHistory} from "react-router-dom";
+import {ABOUT_PATH, MAIN_PAGE_PATH, AUTH_PATH, LOGOUT_PATH, REGISTER_PATH} from "../../config/constants";
+import {auth} from '../../firebase';
+import {useStoreActions, useStoreState} from 'easy-peasy';
 
 const NavBar = (props) => {
   const { isSubmitted, startRoute, endRoute } = useStoreState(
@@ -13,7 +14,11 @@ const NavBar = (props) => {
   );
 
   const sideBarRef = useRef(null);
+  const history = useHistory();
 
+  const { isLoggedIn } = useStoreState(store => store.user);
+  const dispatchLogout = useStoreActions(actions => actions.user.logout);
+  
   useEffect(() => {
     if (isSubmitted) {
       openNavbarHandler();
@@ -30,38 +35,58 @@ const NavBar = (props) => {
   };
 
   const renderContent = () => {
-    if (!isSubmitted) {
-      return (
-        <React.Fragment>
-          <NavLink
-            to={MAIN_PAGE_PATH}
-            exact
-            onClick={closeNavbarHandler}
-            className={[classes.NavLink, classes.AppLogoNavLink].join(" ")}
-          >
-            Breathe
-          </NavLink>
-          <NavLink
-            to={ABOUT_PATH}
-            onClick={closeNavbarHandler}
-            className={classes.NavLink}
-            activeClassName={classes.ActiveNavLink}
-          >
-            About
-          </NavLink>
-        </React.Fragment>
-      );
-    }
-
-    return (
+    if(isSubmitted){
+     return (
       <React.Fragment>
         <form>
           <input value={startRoute} />
           <input value={endRoute} />
         </form>
       </React.Fragment>
-    );
+    ); 
+    }
+    if(!isLoggedIn){
+      <React.Fragment>
+              <NavLink
+                  to={AUTH_PATH}
+                  onClick={closeNavbarHandler}
+                  className={classes.NavLink}
+              >
+                Login
+              </NavLink>
+              <NavLink
+                  to={REGISTER_PATH}
+                  onClick={closeNavbarHandler}
+                  className={classes.NavLink}
+              >
+                Register
+              </NavLink>
+            </>
+      </React.Fragment>
+    }else{
+      return (
+        <React.Fragment>
+          <NavLink
+                to={LOGOUT_PATH}
+                onClick={logout}
+                className={classes.NavLink}
+            >
+              Log out
+            </NavLink>
+        </React.Fragment>
+      );
+    }
   };
+}
+
+  const logout = () => {
+    auth.signOut().then(async () => {
+      await dispatchLogout();
+      history.push('/');
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
   return (
     <div>
