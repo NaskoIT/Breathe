@@ -4,7 +4,7 @@ import { API_KEY } from "../../config/constants";
 import tt from "@tomtom-international/web-sdk-maps";
 import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
 import { services } from "@tomtom-international/web-sdk-services";
-import { along, lineString } from "@turf/turf";
+import bboxPolygon from "@turf/bbox-polygon";
 
 const ttSearchBox = new SearchBox(services, {
   idleTimePress: 1000,
@@ -49,19 +49,23 @@ class MapComponent extends Component {
     this.mapRef.current.addControl(new tt.NavigationControl());
     this.mapRef.current.addControl(ttSearchBox, "top-left");
 
+    console.log(heatMapData);
     const features = [];
     Object.keys(heatMapData).forEach((name) => {
       const length = heatMapData[name].length;
-      this.avoidAreas[name] = {
-        southWestCorner: {
-          latitude: heatMapData[name][0][0],
-          longitude: heatMapData[name][0][1],
-        },
-        northEastCorner: {
-          latitude: heatMapData[name][length - 1][0],
-          longitude: heatMapData[name][length - 1][1],
-        },
-      };
+      const span = parseInt(length / 5 - 1);
+      for (let i = 0; i < length - span - 1; i += span) {
+        this.avoidAreas[name + "-" + i] = {
+          southWestCorner: {
+            latitude: heatMapData[name][i][1],
+            longitude: heatMapData[name][i][0],
+          },
+          northEastCorner: {
+            latitude: heatMapData[name][i + span - 1][1],
+            longitude: heatMapData[name][i + span - 1][0],
+          },
+        };
+      }
       heatMapData[name].forEach((obj) => {
         features.push({
           geometry: {
@@ -266,7 +270,7 @@ class MapComponent extends Component {
           },
           paint: {
             "line-color": "blue",
-            "line-width": routeWeight,
+            "line-width": 6,
           },
         });
 
@@ -288,28 +292,24 @@ class MapComponent extends Component {
   }
 
   drawAreaPolygon(areaName) {
-    const data = this.props.heatMapData[areaName];
-    var line = lineString(data);
-    console.log(data);
-    console.log(line);
+    var area = this.avoidAreas[areaName];
 
-    // var areaPolygon = bboxPolygon([
-    //   area.southWestCorner.longitude,
-    //   area.southWestCorner.latitude,
-    //   area.northEastCorner.longitude,
-    //   area.northEastCorner.latitude,
-    // ]);
-    const alongLine = along(line, 0.1, { units: "kilometers" });
+    var areaPolygon = bboxPolygon([
+      area.southWestCorner.longitude,
+      area.southWestCorner.latitude,
+      area.northEastCorner.longitude,
+      area.northEastCorner.latitude,
+    ]);
 
     this.mapRef.current.addLayer({
       id: areaName,
       type: "fill",
       source: {
         type: "geojson",
-        data: alongLine,
+        data: areaPolygon,
       },
       paint: {
-        "fill-color": "red",
+        "fill-color": "blue",
         "fill-opacity": 0.5,
       },
     });
@@ -318,7 +318,7 @@ class MapComponent extends Component {
       type: "line",
       source: {
         type: "geojson",
-        data: alongLine,
+        data: areaPolygon,
       },
       paint: {
         "line-color": "blue",
