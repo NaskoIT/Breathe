@@ -1,5 +1,6 @@
 import { action } from 'easy-peasy';
 import streetData from '../mocks/street_coords.json';
+// import pointCloudData from '../mocks/point_clouds.json';
 
 export const navigationStore = {
     /**
@@ -10,7 +11,7 @@ export const navigationStore = {
     isSubmitted: false,
     currentLocation: '',
     wantedLocation: '',
-    heatMapData: streetData,
+    heatMapData: { ...streetData },
 
     /**
      * ACTIONS
