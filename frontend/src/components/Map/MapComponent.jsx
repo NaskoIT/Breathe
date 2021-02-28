@@ -7,7 +7,7 @@ import { services } from "@tomtom-international/web-sdk-services";
 import { bboxPolygon, lineString, length } from "@turf/turf";
 
 const ttSearchBox = new SearchBox(services, {
-  idleTimePress: 1000,
+  idleTimePress: 5000,
   minNumberOfCharacters: 2,
   searchOptions: {
     key: API_KEY,
@@ -15,6 +15,8 @@ const ttSearchBox = new SearchBox(services, {
   },
   showSearchButton: true,
   noResultsMessage: "No results found.",
+  placeholder: "Find location...",
+  autocompleteOptions: true,
 });
 
 const routeWeight = 9;
@@ -45,12 +47,23 @@ class MapComponent extends Component {
       container: "map",
     });
 
+    var geolocateControl = new tt.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+    });
+
     this.mapRef.current.addControl(new tt.FullscreenControl());
     this.mapRef.current.addControl(new tt.NavigationControl());
     this.mapRef.current.addControl(ttSearchBox, "top-left");
+    this.mapRef.current.addControl(geolocateControl);
+
+    geolocateControl._onSuccess(() => console.log("_onSuccess"));
 
     const features = [];
     Object.keys(heatMapData).forEach((name) => {
+      console.log("street name: ", name);
       const dataLength = heatMapData[name].length;
       const line = lineString([
         heatMapData[name][0],
