@@ -59,8 +59,6 @@ class MapComponent extends Component {
     this.mapRef.current.addControl(ttSearchBox, "top-left");
     this.mapRef.current.addControl(geolocateControl);
 
-    geolocateControl._onSuccess(() => console.log("_onSuccess"));
-
     const features = [];
     Object.keys(heatMapData).forEach((name) => {
       console.log("street name: ", name);
@@ -266,7 +264,7 @@ class MapComponent extends Component {
           },
         });
 
-        self.drawAreas();
+        // self.drawAreas();
 
         const bounds = new tt.LngLatBounds();
         geojson.features[0].geometry.coordinates.forEach(function (point) {
